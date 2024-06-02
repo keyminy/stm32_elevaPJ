@@ -12,7 +12,7 @@
 void dotmatrix_main_test();
 int dotmatrix_main(void);
 void init_dotmatrix(void);
-void set_dotmatrix_buffer(uint8_t curr_eleva_state, uint8_t target_floor);
+void set_dotmatrix_buffer(uint8_t curr_eleva_state, uint8_t floor);
 void control_dotmatrix(uint8_t curr_eleva_state);
 void clear_dotmatrix_buffer(void);
 
