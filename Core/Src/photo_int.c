@@ -43,13 +43,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		// clear_dotmatrix_buff();
 	}else{
 		// display dotmatrixLED to show the floor currently facing and the driection of the arrow.
-		switch(get_curr_eleva_state()){
-		case ELEVA_START_BOTTOM_UP:
-			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()+1);
-			break;
-		case ELEVA_START_TOP_DOWN:
-			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()-1);
-			break;
-		}
+//		switch(get_curr_eleva_state()){
+//		case ELEVA_START_BOTTOM_UP:
+//			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()+1);
+//			break;
+//		case ELEVA_START_TOP_DOWN:
+//			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()-1);
+//			break;
+//		}
 	}
 }

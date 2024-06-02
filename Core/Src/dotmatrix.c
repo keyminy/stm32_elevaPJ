@@ -130,7 +130,6 @@ void control_dotmatrix(uint8_t curr_eleva_state){
         if(TIM2_1ms_DOT_counter >= 1){
         	TIM2_1ms_DOT_counter = 0;
         	// for문 행 8행 돈다
-        	i = 0;
 			col[0] = ~(1 << i); // 0000_0001 -->(one's complement 1111_1110)
 			col[1] = display_data[i];
 			HAL_SPI_Transmit(&hspi2, col, 2, 1); // 2byte전송 timeout은 1ms
@@ -141,76 +140,76 @@ void control_dotmatrix(uint8_t curr_eleva_state){
 			i%=8;
         }
 		break;
-	case ELEVA_START_BOTTOM_UP:
-		now = HAL_GetTick();  // 1ms
-		// 1ms인 한 틱을 읽는다.
-		// 틱값을 읽으면서 현재 몇 ms가 됬는지 안됬는지 check함
-		// 500ms마다 한 칸 씩 shift하면서 돌리겠다.
-		// 1.처음시작시 past_time=0; now: 500 --> past_time=500
-		if (now - past_time >= 500) // 500ms scroll
-		{
-			past_time = now;
-			for (int i = 0; i < 8; i++) {
-				// upward scrolling
-				 display_data[i] = (scroll_buffer[index][(i + count) % 8]);
-			}
-			if (++count == 8) // 8칼람을 다 처리 했으면 다음 scroll_buffer로 이동
-			{
-				count = 0;
-				index++;  // 다음 scroll_buffer로 이동
-				if (index == number_of_character + 1)
-					index = 0;
-				// 11개의 문자를 다 처리 했으면 0번 scroll_buffer를 처리 하기위해 이동
-			}
-		}
-		for (int i=0; i < 8; i++)
-		{
-			// common annode type
-			// column에는 0을 ROW에는 1을 출력해야 해당 LED가 on된다.
-			// for문 행 8행 돈다
-			col[0] = ~(1 << i); // 0000_0001 -->(one's complement 1111_1110)
-			col[1] = display_data[i];
-			HAL_SPI_Transmit(&hspi2, col, 2, 1); // 2byte전송 timeout은 1ms
-			GPIOB->ODR &= ~GPIO_PIN_15;   // latch핀을 pull-down
-			GPIOB->ODR |= GPIO_PIN_15;   // latch핀을 pull-up
-			HAL_Delay(1); // 잔상효과 없애기위해 1ms
-		}
-		break;
-	case ELEVA_START_TOP_DOWN:
-		// 1ms인 한 틱을 읽는다.
-		now = HAL_GetTick();  // 1ms
-		// 틱값을 읽으면서 현재 몇 ms가 됬는지 안됬는지 check함
-		// 500ms마다 한 칸 씩 shift하면서 돌리겠다.
-		// 1.처음시작시 past_time=0; now: 500 --> past_time=500
-		if (now - past_time >= 500) // 500ms scroll
-		{
-			past_time = now;
-			for (int i = 0; i < 8; i++) {
-				// downward scrolling
-				display_data[i] = (scroll_buffer[index][(i + 8 - count) % 8]);
-			}
-			if (++count == 8) // 8칼람을 다 처리 했으면 다음 scroll_buffer로 이동
-			{
-				count = 0;
-				index++;  // 다음 scroll_buffer로 이동
-				if (index == number_of_character + 1)
-					index = 0;
-				// 11개의 문자를 다 처리 했으면 0번 scroll_buffer를 처리 하기위해 이동
-			}
-		}
-		for (int i=0; i < 8; i++)
-		{
-			// common annode type
-			// column에는 0을 ROW에는 1을 출력해야 해당 LED가 on된다.
-			// for문 행 8행 돈다
-			col[0] = ~(1 << i); // 0000_0001 -->(one's complement 1111_1110)
-			col[1] = display_data[i];
-			HAL_SPI_Transmit(&hspi2, col, 2, 1); // 2byte전송 timeout은 1ms
-			GPIOB->ODR &= ~GPIO_PIN_15;   // latch핀을 pull-down
-			GPIOB->ODR |= GPIO_PIN_15;   // latch핀을 pull-up
-			HAL_Delay(1); // 잔상효과 없애기위해 1ms
-		}
-		break;
+//	case ELEVA_START_BOTTOM_UP:
+//		//now = HAL_GetTick();  // 1ms
+//		// 1ms인 한 틱을 읽는다.
+//		// 틱값을 읽으면서 현재 몇 ms가 됬는지 안됬는지 check함
+//		// 500ms마다 한 칸 씩 shift하면서 돌리겠다.
+//		// 1.처음시작시 past_time=0; now: 500 --> past_time=500
+//		if (now - past_time >= 500) // 500ms scroll
+//		{
+//			past_time = now;
+//			for (int i = 0; i < 8; i++) {
+//				// upward scrolling
+//				 display_data[i] = (scroll_buffer[index][(i + count) % 8]);
+//			}
+//			if (++count == 8) // 8칼람을 다 처리 했으면 다음 scroll_buffer로 이동
+//			{
+//				count = 0;
+//				index++;  // 다음 scroll_buffer로 이동
+//				if (index == number_of_character + 1)
+//					index = 0;
+//				// 11개의 문자를 다 처리 했으면 0번 scroll_buffer를 처리 하기위해 이동
+//			}
+//		}
+//		for (int i=0; i < 8; i++)
+//		{
+//			// common annode type
+//			// column에는 0을 ROW에는 1을 출력해야 해당 LED가 on된다.
+//			// for문 행 8행 돈다
+//			col[0] = ~(1 << i); // 0000_0001 -->(one's complement 1111_1110)
+//			col[1] = display_data[i];
+//			HAL_SPI_Transmit(&hspi2, col, 2, 1); // 2byte전송 timeout은 1ms
+//			GPIOB->ODR &= ~GPIO_PIN_15;   // latch핀을 pull-down
+//			GPIOB->ODR |= GPIO_PIN_15;   // latch핀을 pull-up
+//			HAL_Delay(1); // 잔상효과 없애기위해 1ms
+//		}
+//		break;
+//	case ELEVA_START_TOP_DOWN:
+//		// 1ms인 한 틱을 읽는다.
+//		//now = HAL_GetTick();  // 1ms
+//		// 틱값을 읽으면서 현재 몇 ms가 됬는지 안됬는지 check함
+//		// 500ms마다 한 칸 씩 shift하면서 돌리겠다.
+//		// 1.처음시작시 past_time=0; now: 500 --> past_time=500
+//		if (now - past_time >= 500) // 500ms scroll
+//		{
+//			past_time = now;
+//			for (int i = 0; i < 8; i++) {
+//				// downward scrolling
+//				display_data[i] = (scroll_buffer[index][(i + 8 - count) % 8]);
+//			}
+//			if (++count == 8) // 8칼람을 다 처리 했으면 다음 scroll_buffer로 이동
+//			{
+//				count = 0;
+//				index++;  // 다음 scroll_buffer로 이동
+//				if (index == number_of_character + 1)
+//					index = 0;
+//				// 11개의 문자를 다 처리 했으면 0번 scroll_buffer를 처리 하기위해 이동
+//			}
+//		}
+//		for (int i=0; i < 8; i++)
+//		{
+//			// common annode type
+//			// column에는 0을 ROW에는 1을 출력해야 해당 LED가 on된다.
+//			// for문 행 8행 돈다
+//			col[0] = ~(1 << i); // 0000_0001 -->(one's complement 1111_1110)
+//			col[1] = display_data[i];
+//			HAL_SPI_Transmit(&hspi2, col, 2, 1); // 2byte전송 timeout은 1ms
+//			GPIOB->ODR &= ~GPIO_PIN_15;   // latch핀을 pull-down
+//			GPIOB->ODR |= GPIO_PIN_15;   // latch핀을 pull-up
+//			HAL_Delay(1); // 잔상효과 없애기위해 1ms
+//		}
+//		break;
 	}
 }
 
