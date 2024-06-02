@@ -93,6 +93,7 @@ const osMutexAttr_t mutex_lcd_attributes = {
 uint8_t rx_data;
 
 volatile int TIM2_1ms_counter=0;
+volatile int TIM2_1ms_DOT_counter=0;
 volatile int TIM2_74HC595_counter=0;
 volatile int TIM2_servo_motor_count=0;
 
@@ -727,7 +728,10 @@ void ctrl_dotmatrix(void *argument)
   /* Infinite loop */
   for(;;)
   {
-//	  control_dotmatrix(get_curr_eleva_state());
+	 // dotmatrix_main_test();
+	control_dotmatrix(get_curr_eleva_state());
+	//  dotmatrix_main();
+//	  dotmatrix_main_test();
     osDelay(1);
   }
   /* USER CODE END ctrl_dotmatrix */
@@ -772,6 +776,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if (htim->Instance == TIM2)
 	{
 		TIM2_1ms_counter++;
+		TIM2_1ms_DOT_counter++;
 		TIM2_74HC595_counter++;
 	}
   /* USER CODE END Callback 1 */

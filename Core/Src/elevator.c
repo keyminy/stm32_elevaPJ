@@ -15,10 +15,9 @@ void elevator_init(void){
 	/*peripheral*/
 	i2c_lcd_init(); // warning LCD should be connected(because I2C protocol doesn't working)
 	//init_dotmatrix();
-
+	set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor());
 	display_lcd_floor_info();
 	//display_fnd_floor_info(curr_floor);
-
 }
 
 void set_curr_floor(uint8_t floor){
@@ -62,7 +61,7 @@ void display_lcd_alert_info(void){
 	// clear
 	lcd_command(CLEAR_DISPLAY);
 
-	sprintf(lcd_buff1, "Wrong Input!!! : %d", target_floor);
+	sprintf(lcd_buff1, "     Wrong Input!!! : %d", target_floor);
 	move_cursor(0, 0);
 	lcd_string(lcd_buff1);
 }

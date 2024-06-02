@@ -7,6 +7,7 @@
 #include "button.h" 
 #include "def.h"
 #include "elevator.h"
+#include "dotmatrix.h"
 
 extern int motor_state; // default : MOTOR_IDLE
 
@@ -75,10 +76,11 @@ void choose_eleva_floor(void){
 		}else if(get_curr_floor() > FLOOR_2){
 			// when get_curr_floor() is FLOOR_3
 			set_curr_eleva_state(ELEVA_START_TOP_DOWN);
-
+			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()-1);
 		}else if(get_curr_floor() < FLOOR_2){
 			// when get_curr_floor() is FLOOR_1
 			set_curr_eleva_state(ELEVA_START_BOTTOM_UP);
+			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()+1);
 		}
 	  set_target_floor(FLOOR_2);
 	  display_lcd_floor_info();
@@ -91,6 +93,7 @@ void choose_eleva_floor(void){
 		} else if (get_curr_floor() < FLOOR_3) {
 			// when get_curr_floor() is FLOOR_1 or FLOOR_2
 			set_curr_eleva_state(ELEVA_START_BOTTOM_UP);
+			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()+1);
 		}
 	  set_target_floor(FLOOR_3);
 	  display_lcd_floor_info();
