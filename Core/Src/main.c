@@ -92,6 +92,13 @@ const osThreadAttr_t FndTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for ServoMotorTask */
+osThreadId_t ServoMotorTaskHandle;
+const osThreadAttr_t ServoMotorTask_attributes = {
+  .name = "ServoMotorTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* Definitions for mutex_lcd */
 osMutexId_t mutex_lcdHandle;
 const osMutexAttr_t mutex_lcd_attributes = {
@@ -123,6 +130,7 @@ void ctrl_stepmotor(void *argument);
 void ctrl_dotmatrix(void *argument);
 void polling_btn(void *argument);
 void ctrl_fnd(void *argument);
+void ctrl_servomotor(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -240,6 +248,9 @@ int main(void)
 
   /* creation of FndTask */
   FndTaskHandle = osThreadNew(ctrl_fnd, NULL, &FndTask_attributes);
+
+  /* creation of ServoMotorTask */
+  ServoMotorTaskHandle = osThreadNew(ctrl_servomotor, NULL, &ServoMotorTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -805,6 +816,25 @@ void ctrl_fnd(void *argument)
     osDelay(1);
   }
   /* USER CODE END ctrl_fnd */
+}
+
+/* USER CODE BEGIN Header_ctrl_servomotor */
+/**
+* @brief Function implementing the ServoMotorTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_ctrl_servomotor */
+void ctrl_servomotor(void *argument)
+{
+  /* USER CODE BEGIN ctrl_servomotor */
+  /* Infinite loop */
+  for(;;)
+  {
+	  servo_motor_main();
+    osDelay(1);
+  }
+  /* USER CODE END ctrl_servomotor */
 }
 
 /**

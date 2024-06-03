@@ -8,6 +8,11 @@ typedef enum{
 } MOTOR_STATE;
 
 typedef enum{
+	SERVO_OPEN // 0 dgree
+	,SERVO_LOCK // 180 dgree
+} SERVO_STATE;
+
+typedef enum{
 	ELEVA_STOP = 0,
 	ELEVA_START_BOTTOM_UP,
 	ELEVA_START_TOP_DOWN

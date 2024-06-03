@@ -2,7 +2,7 @@
 FREERTOS.FootprintOK=true
 FREERTOS.IPParameters=Tasks01,configUSE_NEWLIB_REENTRANT,FootprintOK,Mutexes01
 FREERTOS.Mutexes01=mutex_lcd,Dynamic,NULL
-FREERTOS.Tasks01=defaultTask,24,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;StepMotorTask,8,128,ctrl_stepmotor,Default,NULL,Dynamic,NULL,NULL;DotMatrixTask,8,128,ctrl_dotmatrix,Default,NULL,Dynamic,NULL,NULL;PollingBtnTask,8,128,polling_btn,Default,NULL,Dynamic,NULL,NULL;FndTask,8,128,ctrl_fnd,Default,NULL,Dynamic,NULL,NULL
+FREERTOS.Tasks01=defaultTask,24,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL;StepMotorTask,8,128,ctrl_stepmotor,Default,NULL,Dynamic,NULL,NULL;DotMatrixTask,8,128,ctrl_dotmatrix,Default,NULL,Dynamic,NULL,NULL;PollingBtnTask,8,128,polling_btn,Default,NULL,Dynamic,NULL,NULL;FndTask,8,128,ctrl_fnd,Default,NULL,Dynamic,NULL,NULL;ServoMotorTask,8,128,ctrl_servomotor,Default,NULL,Dynamic,NULL,NULL
 FREERTOS.configUSE_NEWLIB_REENTRANT=1
 File.Version=6
 GPIO.groupedBy=Group By Peripherals

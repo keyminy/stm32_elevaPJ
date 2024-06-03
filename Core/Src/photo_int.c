@@ -1,9 +1,11 @@
+#include <servomotor.h>
 #include "photo_int.h"
 #include "def.h"
-#include "servo_motor.h"
 #include "elevator.h"
 #include "dotmatrix.h"
+#include "servomotor.h"
 
+extern volatile int TIM2_servo_motor_count;
 /**
  * moved from Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
  * EXTI Callback Function
@@ -38,6 +40,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if(get_curr_floor() == get_target_floor()){
 		// Stop step motor, Because we've reached the desired floor.
 		set_curr_eleva_state(ELEVA_STOP);
+		// start_servo control : door open and close
+		set_servo_state(SERVO_OPEN);
+		TIM2_servo_motor_count = 0;
+		// end_servo control : door open and close
 		clear_dotmatrix_buffer();
 		// display current floor on dotmatrix
 		 set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor());

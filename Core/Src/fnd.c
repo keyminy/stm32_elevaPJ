@@ -61,7 +61,7 @@ void fnd_display(){
         HAL_GPIO_WritePin(FND_DIGIT4_GPIO_Port, FND_DIGIT4_Pin, GPIO_PIN_RESET);
 
         // Send segment data to the shift register
-       fnd_send_data(fnd_font[get_curr_floor()]); // <- I want to display number "1"
+       fnd_send_data(fnd_font[get_curr_floor()]);
 
        HAL_GPIO_WritePin(FND_DIGIT1_GPIO_Port, FND_DIGIT1_Pin, GPIO_PIN_SET); // Turn on digit1
 
