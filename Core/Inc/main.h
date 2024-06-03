@@ -81,6 +81,11 @@ void Error_Handler(void);
 #define PhotoSensor_EXTI4_Pin GPIO_PIN_4
 #define PhotoSensor_EXTI4_GPIO_Port GPIOA
 #define PhotoSensor_EXTI4_EXTI_IRQn EXTI4_IRQn
+#define PhotoSensor_EXTI5_Pin GPIO_PIN_5
+#define PhotoSensor_EXTI5_GPIO_Port GPIOA
+#define PhotoSensor_EXTI5_EXTI_IRQn EXTI9_5_IRQn
+#define BUTTON3_Pin GPIO_PIN_4
+#define BUTTON3_GPIO_Port GPIOC
 #define LED0_Pin GPIO_PIN_0
 #define LED0_GPIO_Port GPIOB
 #define LED1_Pin GPIO_PIN_1

@@ -631,14 +631,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BUTTON0_Pin BUTTON1_Pin BUTTON2_Pin */
-  GPIO_InitStruct.Pin = BUTTON0_Pin|BUTTON1_Pin|BUTTON2_Pin;
+  /*Configure GPIO pins : BUTTON0_Pin BUTTON1_Pin BUTTON2_Pin BUTTON3_Pin */
+  GPIO_InitStruct.Pin = BUTTON0_Pin|BUTTON1_Pin|BUTTON2_Pin|BUTTON3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PhotoSensor_EXTI0_Pin PhotoSensor_EXTI1_Pin PhotoSensor_EXTI4_Pin */
-  GPIO_InitStruct.Pin = PhotoSensor_EXTI0_Pin|PhotoSensor_EXTI1_Pin|PhotoSensor_EXTI4_Pin;
+  /*Configure GPIO pins : PhotoSensor_EXTI0_Pin PhotoSensor_EXTI1_Pin PhotoSensor_EXTI4_Pin PhotoSensor_EXTI5_Pin */
+  GPIO_InitStruct.Pin = PhotoSensor_EXTI0_Pin|PhotoSensor_EXTI1_Pin|PhotoSensor_EXTI4_Pin|PhotoSensor_EXTI5_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -670,6 +670,9 @@ static void MX_GPIO_Init(void)
 
   HAL_NVIC_SetPriority(EXTI4_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 
@@ -709,6 +712,8 @@ void ctrl_stepmotor(void *argument)
   /* Infinite loop */
   for(;;)
   {
+//	  perform_motor_step_backward();
+//	  perform_motor_step_forward();
 	  ctrl_stepmotor_eleva(get_curr_eleva_state());
     osDelay(1);
   }

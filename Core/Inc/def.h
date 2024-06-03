@@ -16,7 +16,8 @@ typedef enum{
 typedef enum{
 	FLOOR_1 = 1,
 	FLOOR_2,
-	FLOOR_3
+	FLOOR_3,
+	FLOOR_4
 } Floor;
 
 #endif /* INC_DEF_H_ */

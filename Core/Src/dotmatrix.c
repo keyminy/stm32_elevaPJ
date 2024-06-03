@@ -20,46 +20,46 @@ static const uint8_t floor_num[5][8] =
     0b01111110,
     0b00011000
     }, // 0
-    {
-    0b00011000,
-    0b00111000,
-    0b01111000,
-    0b01111000,
-    0b00011000,
-    0b00011000,
-    0b00011000,
-    0b11111111
-    }, // 1
-    {
-    0b00111000,
-    0b01111100,
-    0b11000010,
-    0b00000010,
-    0b00001110,
-    0b00011000,
-    0b00110000,
-    0b11111111
-    }, // 2
-    {
-    0b00011000,
-    0b00100100,
-    0b01000010,
-    0b00000010,
-    0b00111110,
-    0b00000010,
-    0b01000010,
-    0b00111110
-    }, // 3
-    {
-    0b00000100,
-    0b00001100,
-    0b00010100,
-    0b00100100,
-    0b01111111,
-    0b00000100,
-    0b00000100,
-    0b00000100
-    }  // 4
+	{
+	0b00000000,
+	0b00011000,
+	0b00111000,
+	0b01111000,
+	0b00011000,
+	0b00011000,
+	0b01111110,
+	0b00000000
+	}, // 1
+	{
+	0b00000000,
+	0b00111100,
+	0b01100110,
+	0b01000110,
+	0b00001100,
+	0b00011000,
+	0b01111110,
+	0b00000000
+	}, // 2
+	{
+	0b00000000,
+	0b00111100,
+	0b01000010,
+	0b00000010,
+	0b00001110,
+	0b01000010,
+	0b00111100,
+	0b00000000
+	}, // 3
+	{
+	0b00000000,
+	0b00001100,
+	0b00010100,
+	0b00100100,
+	0b01111110,
+	0b00000100,
+	0b00000100,
+	0b00000000
+	}  // 4
 };
 
 static const uint8_t up_arrow[] =
@@ -71,12 +71,12 @@ static const uint8_t up_arrow[] =
 	0b00111100,
 	0b00111100,
 	0b00111100,
-	0b00111100
+	0b00000000
 };
 
 static const uint8_t down_arrow[] =
 {
-	0b00111100,
+	0b00000000,
 	0b00111100,
 	0b00111100,
 	0b00111100,
@@ -99,11 +99,11 @@ static const uint8_t all_off[] =
 };
 
 unsigned char display_data[8];  // Final 8x8 Output Data
-unsigned char scroll_buffer[20][8] = {0};  // Buffer containing data to be scrolled <- blank,arrow,number
+unsigned char scroll_buffer[30][8] = {0};  // Buffer containing data to be scrolled <- blank,arrow,number
 int number_of_character = 4;  // Number of characters to output
 
 void clear_dotmatrix_buffer(void){
-	for	(int i = 0; i < 20; i++) // 1부터 시작
+	for	(int i = 0; i < 30; i++) // 1부터 시작
 	{
 		for (int j = 0; j < 8; j++) // scroll_buffer[0] = blank
 		{
@@ -116,21 +116,22 @@ void control_dotmatrix(uint8_t curr_eleva_state){
 	static int index=0;  // scroll_buffer의 2차원 index값
 	static uint32_t past_time=0;  // 이전 tick값 저장
 	uint32_t now = HAL_GetTick();  // 1ms
-	static uint8_t i =0;
+	static uint8_t i_iter =0;
 	//(반장님조언)- 타이머변수를 이용해서 switch가기전(SPI하기전) 1ms마다 호출되게
 	switch(curr_eleva_state){
 	case ELEVA_STOP:
+		set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor());
         if(TIM2_1ms_DOT_counter >= 1){
         	TIM2_1ms_DOT_counter = 0;
         	// for문 행 8행 돈다
-			col[0] = ~(1 << i); // 0000_0001 -->(one's complement 1111_1110)
-			col[1] = display_data[i];
+			col[0] = ~(1 << i_iter); // 0000_0001 -->(one's complement 1111_1110)
+			col[1] = display_data[i_iter];
 			HAL_SPI_Transmit(&hspi2, col, 2, 1); // 2byte전송 timeout은 1ms
 			GPIOB->ODR &= ~GPIO_PIN_15;   // latch핀을 pull-down
 			GPIOB->ODR |= GPIO_PIN_15;   // latch핀을 pull-up
 			//HAL_Delay(1); // 잔상효과 없애기위해 1ms
-			i++;
-			i%=8;
+			i_iter++;
+			i_iter%=8;
         }
 		break;
 	case ELEVA_START_BOTTOM_UP:
@@ -160,14 +161,14 @@ void control_dotmatrix(uint8_t curr_eleva_state){
 			// common annode type
 			// column에는 0을 ROW에는 1을 출력해야 해당 LED가 on된다.
 			// for문 행 8행 돈다
-			col[0] = ~(1 << i); // 0000_0001 -->(one's complement 1111_1110)
-			col[1] = display_data[i];
+			col[0] = ~(1 << i_iter); // 0000_0001 -->(one's complement 1111_1110)
+			col[1] = display_data[i_iter];
 			HAL_SPI_Transmit(&hspi2, col, 2, 1); // 2byte전송 timeout은 1ms
 			GPIOB->ODR &= ~GPIO_PIN_15;   // latch핀을 pull-down
 			GPIOB->ODR |= GPIO_PIN_15;   // latch핀을 pull-up
 			//HAL_Delay(1); // 잔상효과 없애기위해 1ms
-			i++;
-			i%=8;
+			i_iter++;
+			i_iter%=8;
 		}
 		break;
 	case ELEVA_START_TOP_DOWN:
@@ -197,14 +198,14 @@ void control_dotmatrix(uint8_t curr_eleva_state){
 			// common annode type
 			// column에는 0을 ROW에는 1을 출력해야 해당 LED가 on된다.
 			// for문 행 8행 돈다
-			col[0] = ~(1 << i); // 0000_0001 -->(one's complement 1111_1110)
-			col[1] = display_data[i];
+			col[0] = ~(1 << i_iter); // 0000_0001 -->(one's complement 1111_1110)
+			col[1] = display_data[i_iter];
 			HAL_SPI_Transmit(&hspi2, col, 2, 1); // 2byte전송 timeout은 1ms
 			GPIOB->ODR &= ~GPIO_PIN_15;   // latch핀을 pull-down
 			GPIOB->ODR |= GPIO_PIN_15;   // latch핀을 pull-up
 			//HAL_Delay(1); // 잔상효과 없애기위해 1ms
-			i++;
-			i%=8;
+			i_iter++;
+			i_iter%=8;
 		}
 		break;
 	}

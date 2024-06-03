@@ -12,28 +12,26 @@
   * @retval None
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	/* Prevent unused argument(s) compilation warning */
-	UNUSED(GPIO_Pin);
-	/* NOTE: This function Should not be modified, when the callback is needed,
-	 the HAL_GPIO_EXTI_Callback could be implemented in the user file
-	 */
 	switch (GPIO_Pin) {
 	case PhotoSensor_EXTI0_Pin: // PA0 -> FLOOR_1
-		printf("GPIO_PIN_0!!\n"); //for test
+//		printf("GPIO_PIN_0!!\n"); //for test
 		set_curr_floor(FLOOR_1);
 		display_lcd_floor_info();
 		break;
 	case PhotoSensor_EXTI1_Pin: // PA1 -> FLOOR_2
-		printf("GPIO_PIN_1!!\n"); //for test
+//		printf("GPIO_PIN_1!!\n"); //for test
 		set_curr_floor(FLOOR_2);
 		display_lcd_floor_info();
-
 		break;
 	case PhotoSensor_EXTI4_Pin: // PA4 -> FLOOR_3
-		printf("GPIO_PIN_4!!\n"); //for test
+//		printf("GPIO_PIN_4!!\n"); //for test
 		set_curr_floor(FLOOR_3);
 		display_lcd_floor_info();
-
+		break;
+	case PhotoSensor_EXTI5_Pin: // PA5 -> FLOOR_4
+//		printf("GPIO_PIN_5!!\n"); //for test
+		set_curr_floor(FLOOR_4);
+		display_lcd_floor_info();
 		break;
 	}
 

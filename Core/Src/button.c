@@ -12,7 +12,7 @@
 extern int motor_state; // default : MOTOR_IDLE
 
 unsigned char button_status[BUTTON_NUMBER] =
-	{BUTTON_RELEASE,BUTTON_RELEASE,BUTTON_RELEASE};
+	{BUTTON_RELEASE,BUTTON_RELEASE,BUTTON_RELEASE,BUTTON_RELEASE};
 	
 
 char button0_count=0;
@@ -76,11 +76,11 @@ void choose_eleva_floor(void){
 		}else if(get_curr_floor() > FLOOR_2){
 			// when get_curr_floor() is FLOOR_3
 			set_curr_eleva_state(ELEVA_START_TOP_DOWN);
-			//set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()-1);
+			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()-1);
 		}else if(get_curr_floor() < FLOOR_2){
 			// when get_curr_floor() is FLOOR_1
 			set_curr_eleva_state(ELEVA_START_BOTTOM_UP);
-			//set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()+1);
+			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()+1);
 		}
 	  set_target_floor(FLOOR_2);
 	  display_lcd_floor_info();
@@ -90,12 +90,34 @@ void choose_eleva_floor(void){
 			set_curr_eleva_state(ELEVA_STOP);
 			display_lcd_alert_info();
 			HAL_Delay(2000);
-		} else if (get_curr_floor() < FLOOR_3) {
+		}else if(get_curr_floor() > FLOOR_3){
+			// FLOOR4-> FLOOR3
+			set_curr_eleva_state(ELEVA_START_TOP_DOWN);
+			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()-1);
+		}
+		else if (get_curr_floor() < FLOOR_3) {
 			// when get_curr_floor() is FLOOR_1 or FLOOR_2
 			set_curr_eleva_state(ELEVA_START_BOTTOM_UP);
-			//set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()+1);
+			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()+1);
 		}
 	  set_target_floor(FLOOR_3);
+	  display_lcd_floor_info();
+	}else if(get_button(BUTTON3_GPIO_Port, BUTTON3_Pin, BUTTON3)== BUTTON_PRESS){
+		//button3 : Elavator FLOOR_4
+		if (get_curr_floor() == FLOOR_4) {
+			set_curr_eleva_state(ELEVA_STOP);
+			display_lcd_alert_info();
+			HAL_Delay(2000);
+		}
+//		else if(get_curr_floor() > FLOOR_4){
+//			// we have only 4 floor that's impossible
+//		}
+		else if (get_curr_floor() < FLOOR_4) {
+			// when get_curr_floor() is FLOOR_1 or FLOOR_2
+			set_curr_eleva_state(ELEVA_START_BOTTOM_UP);
+			set_dotmatrix_buffer(get_curr_eleva_state(),get_curr_floor()+1);
+		}
+	  set_target_floor(FLOOR_4);
 	  display_lcd_floor_info();
 	}
 }
