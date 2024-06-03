@@ -27,6 +27,7 @@
 #include "extern.h"
 #include "button.h"
 #include "elevator.h"
+#include "fnd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -84,6 +85,13 @@ const osThreadAttr_t PollingBtnTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for FndTask */
+osThreadId_t FndTaskHandle;
+const osThreadAttr_t FndTask_attributes = {
+  .name = "FndTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* Definitions for mutex_lcd */
 osMutexId_t mutex_lcdHandle;
 const osMutexAttr_t mutex_lcd_attributes = {
@@ -94,6 +102,7 @@ uint8_t rx_data;
 
 volatile int TIM2_1ms_counter=0;
 volatile int TIM2_1ms_DOT_counter=0;
+volatile int TIM2_1ms_FND_counter=0;
 volatile int TIM2_74HC595_counter=0;
 volatile int TIM2_servo_motor_count=0;
 
@@ -113,6 +122,7 @@ void StartDefaultTask(void *argument);
 void ctrl_stepmotor(void *argument);
 void ctrl_dotmatrix(void *argument);
 void polling_btn(void *argument);
+void ctrl_fnd(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -227,6 +237,9 @@ int main(void)
 
   /* creation of PollingBtnTask */
   PollingBtnTaskHandle = osThreadNew(polling_btn, NULL, &PollingBtnTask_attributes);
+
+  /* creation of FndTask */
+  FndTaskHandle = osThreadNew(ctrl_fnd, NULL, &FndTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -623,7 +636,11 @@ static void MX_GPIO_Init(void)
                           |LED7_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, StepMotor_IN1_Pin|StepMotor_IN2_Pin|StepMotor_IN3_Pin|StepMotor_IN4_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, StepMotor_IN1_Pin|StepMotor_IN2_Pin|StepMotor_IN3_Pin|StepMotor_IN4_Pin
+                          |FND_DIGIT2_Pin|FND_DIGIT3_Pin|FND_DIGIT4_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, FND_DIGIT1_Pin|FND_DATA_Pin|FND_LATCH_CLOCK_Pin|FND_SHIFT_CLOCK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -654,12 +671,21 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : StepMotor_IN1_Pin StepMotor_IN2_Pin StepMotor_IN3_Pin StepMotor_IN4_Pin */
-  GPIO_InitStruct.Pin = StepMotor_IN1_Pin|StepMotor_IN2_Pin|StepMotor_IN3_Pin|StepMotor_IN4_Pin;
+  /*Configure GPIO pins : StepMotor_IN1_Pin StepMotor_IN2_Pin StepMotor_IN3_Pin StepMotor_IN4_Pin
+                           FND_DIGIT2_Pin FND_DIGIT3_Pin FND_DIGIT4_Pin */
+  GPIO_InitStruct.Pin = StepMotor_IN1_Pin|StepMotor_IN2_Pin|StepMotor_IN3_Pin|StepMotor_IN4_Pin
+                          |FND_DIGIT2_Pin|FND_DIGIT3_Pin|FND_DIGIT4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : FND_DIGIT1_Pin FND_DATA_Pin FND_LATCH_CLOCK_Pin FND_SHIFT_CLOCK_Pin */
+  GPIO_InitStruct.Pin = FND_DIGIT1_Pin|FND_DATA_Pin|FND_LATCH_CLOCK_Pin|FND_SHIFT_CLOCK_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI0_IRQn, 5, 0);
@@ -761,6 +787,26 @@ void polling_btn(void *argument)
   /* USER CODE END polling_btn */
 }
 
+/* USER CODE BEGIN Header_ctrl_fnd */
+/**
+* @brief Function implementing the FndTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_ctrl_fnd */
+void ctrl_fnd(void *argument)
+{
+  /* USER CODE BEGIN ctrl_fnd */
+	init_fnd();
+  /* Infinite loop */
+  for(;;)
+  {
+	fnd_display();
+    osDelay(1);
+  }
+  /* USER CODE END ctrl_fnd */
+}
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM10 interrupt took place, inside
@@ -782,7 +828,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 		TIM2_1ms_counter++;
 		TIM2_1ms_DOT_counter++;
+		TIM2_1ms_FND_counter++;
 		TIM2_74HC595_counter++;
+		TIM2_servo_motor_count++;
 	}
   /* USER CODE END Callback 1 */
 }
