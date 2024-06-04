@@ -5,7 +5,7 @@ extern TIM_HandleTypeDef htim3;
 extern volatile int TIM2_servo_motor_count;// this is 1ms count variable
 
 uint8_t temp_servo_state = 0;
-static uint8_t servo_state = SERVO_OPEN;
+
 
 /*
  * TIM3 operating frequency : 84MHz
@@ -18,18 +18,19 @@ static uint8_t servo_state = SERVO_OPEN;
  * Servomotor 0 degrees : 1ms duty
  * */
 
+static uint8_t servo_state = SERVO_OPEN;
 
 void servo_motor_main(void) {
-
-	if(TIM2_servo_motor_count == 2000){
+	//static int off_flag = 0;
+	if(TIM2_servo_motor_count == 4000){
 		//이러면 시작하자마자 닫힐려나??흠...테스트필요
 		servo_state = SERVO_LOCK;
 	}
 
 	switch (servo_state) {
 	case SERVO_LOCK:
-		// 1.rotation of 180 dgrees
-		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 126); // 2ms
+		// 1.rotation of 90 dgrees
+		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 75);
 		break;
 	case SERVO_OPEN:
 		// 1.rotation of 0 dgrees
