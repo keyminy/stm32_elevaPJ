@@ -18,5 +18,6 @@ void set_curr_eleva_state(uint8_t eleva_state);
 uint8_t get_curr_eleva_state(void);
 void display_lcd_floor_info(void);
 void display_lcd_alert_info(void);
+void eleva_button_check(void);
 
 #endif /* INC_ELEVATOR_H_ */

@@ -25,4 +25,19 @@ typedef enum{
 	FLOOR_4
 } Floor;
 
+#define f1 0b00000011
+#define f2 0b00001100
+#define f3 0b00110000
+#define f4 0b11000000
+
+#define f1_PORT GPIOA
+#define f2_PORT GPIOA
+#define f3_PORT GPIOB
+#define f4_PORT GPIOB
+
+#define f1_PIN GPIO_PIN_0
+#define f2_PIN GPIO_PIN_1
+#define f3_PIN GPIO_PIN_2
+#define f4_PIN GPIO_PIN_3
+
 #endif /* INC_DEF_H_ */
