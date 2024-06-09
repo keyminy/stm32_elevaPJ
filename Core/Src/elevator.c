@@ -3,9 +3,12 @@
 #include "dotmatrix.h"
 #include "i2c_lcd.h"
 
-static uint8_t curr_floor;
-static uint8_t target_floor;
-static uint8_t curr_eleva_state;
+volatile static uint8_t curr_floor;
+volatile static uint8_t target_floor;
+volatile static uint8_t curr_eleva_state;
+volatile char move_flag = 0;
+volatile char open_flag = 0;
+
 
 void elevator_init(void){
 	/*initialize elevator state*/

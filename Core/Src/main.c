@@ -78,13 +78,6 @@ const osThreadAttr_t DotMatrixTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for PollingBtnTask */
-osThreadId_t PollingBtnTaskHandle;
-const osThreadAttr_t PollingBtnTask_attributes = {
-  .name = "PollingBtnTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
-};
 /* Definitions for FndTask */
 osThreadId_t FndTaskHandle;
 const osThreadAttr_t FndTask_attributes = {
@@ -128,7 +121,6 @@ static void MX_TIM3_Init(void);
 void StartDefaultTask(void *argument);
 void ctrl_stepmotor(void *argument);
 void ctrl_dotmatrix(void *argument);
-void polling_btn(void *argument);
 void ctrl_fnd(void *argument);
 void ctrl_servomotor(void *argument);
 
@@ -242,9 +234,6 @@ int main(void)
 
   /* creation of DotMatrixTask */
   DotMatrixTaskHandle = osThreadNew(ctrl_dotmatrix, NULL, &DotMatrixTask_attributes);
-
-  /* creation of PollingBtnTask */
-  PollingBtnTaskHandle = osThreadNew(polling_btn, NULL, &PollingBtnTask_attributes);
 
   /* creation of FndTask */
   FndTaskHandle = osThreadNew(ctrl_fnd, NULL, &FndTask_attributes);
@@ -731,6 +720,7 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)  // while(1)
   {
+	  choose_eleva_floor();
 	  osDelay(1);
   }
   /* USER CODE END 5 */
@@ -779,25 +769,6 @@ void ctrl_dotmatrix(void *argument)
   /* USER CODE END ctrl_dotmatrix */
 }
 
-/* USER CODE BEGIN Header_polling_btn */
-/**
-* @brief Function implementing the PollingBtnTask thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_polling_btn */
-void polling_btn(void *argument)
-{
-  /* USER CODE BEGIN polling_btn */
-  /* Infinite loop */
-  for(;;)
-  {
-	  choose_eleva_floor();
-	  osDelay(1);
-  }
-  /* USER CODE END polling_btn */
-}
-
 /* USER CODE BEGIN Header_ctrl_fnd */
 /**
 * @brief Function implementing the FndTask thread.
@@ -831,7 +802,7 @@ void ctrl_servomotor(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  servo_motor_main();
+//	  servo_motor_main();
     osDelay(1);
   }
   /* USER CODE END ctrl_servomotor */
