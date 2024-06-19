@@ -8,6 +8,8 @@
 #include "def.h"
 #include "elevator.h"
 #include "dotmatrix.h"
+#include "extern.h"
+#include "queue.h"
 
 extern int motor_state; // default : MOTOR_IDLE
 
@@ -121,3 +123,47 @@ void choose_eleva_floor(void){
 	  display_lcd_floor_info();
 	}
 }
+
+
+
+void choose_eleva_floor2(void){
+	if (get_button(BUTTON0_GPIO_Port, BUTTON0_Pin, BUTTON0) == BUTTON_PRESS) {
+		toggle_floor_request(&floor_queue,FLOOR_1);
+	}else if (get_button(BUTTON1_GPIO_Port, BUTTON1_Pin, BUTTON1)== BUTTON_PRESS) {
+		toggle_floor_request(&floor_queue,FLOOR_2);
+	}else if(get_button(BUTTON2_GPIO_Port, BUTTON2_Pin, BUTTON2)== BUTTON_PRESS){
+		toggle_floor_request(&floor_queue,FLOOR_3);
+	}else if(get_button(BUTTON3_GPIO_Port, BUTTON3_Pin, BUTTON3)== BUTTON_PRESS){
+		toggle_floor_request(&floor_queue,FLOOR_4);
+	}
+}
+
+void eleva_button_check(void){
+	if (get_button(BUTTON0_GPIO_Port, BUTTON0_Pin, BUTTON0) == BUTTON_PRESS) {
+		if((pf & f1) == f1){
+			pf &= ~f1;
+		}else{
+			pf |= f1;
+		}
+	}else if (get_button(BUTTON1_GPIO_Port, BUTTON1_Pin, BUTTON1)== BUTTON_PRESS) {
+		if((pf & f2) == f2){
+			pf &= ~f2;
+		}else{
+			pf |= f2;
+		}
+	}else if(get_button(BUTTON2_GPIO_Port, BUTTON2_Pin, BUTTON2)== BUTTON_PRESS){
+		if((pf & f3) == f3){
+			pf &= ~f3;
+		}else{
+			pf |= f3;
+		}
+	}else if(get_button(BUTTON3_GPIO_Port, BUTTON3_Pin, BUTTON3)== BUTTON_PRESS){
+		if((pf & f4) == f4){
+			pf &= ~f4;
+		}else{
+			pf |= f4;
+		}
+	}
+}
+
+

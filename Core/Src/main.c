@@ -720,7 +720,8 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)  // while(1)
   {
-	  choose_eleva_floor();
+	  choose_eleva_floor2();
+	  move_direct_check();
 	  osDelay(1);
   }
   /* USER CODE END 5 */
@@ -761,7 +762,8 @@ void ctrl_dotmatrix(void *argument)
   for(;;)
   {
 	 // dotmatrix_main_test();
-	control_dotmatrix(get_curr_eleva_state());
+	  // TODO
+	//control_dotmatrix(get_curr_eleva_state());
 	//  dotmatrix_main();
 //	  dotmatrix_main_test();
     osDelay(1);
@@ -779,11 +781,11 @@ void ctrl_dotmatrix(void *argument)
 void ctrl_fnd(void *argument)
 {
   /* USER CODE BEGIN ctrl_fnd */
-	init_fnd();
+	//init_fnd();
   /* Infinite loop */
   for(;;)
   {
-	fnd_display();
+	//fnd_display();
     osDelay(1);
   }
   /* USER CODE END ctrl_fnd */

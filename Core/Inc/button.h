@@ -22,5 +22,6 @@ void button0_check(void);
 // Controls the motor state based on the state of the button being pressed.
 void stepmotor_btn_check(void);
 void choose_eleva_floor(void);
+void choose_eleva_floor2(void);
 
 #endif

@@ -7,6 +7,7 @@
 
 #ifndef INC_EXTERN_H_
 #define INC_EXTERN_H_
+#include "queue.h"
 
 extern void led_all_on(void);
 extern void led_all_off(void);
@@ -28,5 +29,10 @@ extern void stepmotor_main(void);
 extern void stepmotor_btn_check(void);
 extern void dc_motor_pwm_control(void);
 extern void UpdateLEDBasedOnPWM();
+
+extern volatile char move_flag;
+extern volatile uint8_t pf; // purpose_fllor
+extern volatile uint8_t cf; // current_floor
+extern volatile Queue floor_queue;
 
 #endif /* INC_EXTERN_H_ */
