@@ -1,8 +1,9 @@
 #include <servomotor.h>
 #include "def.h"
+#include "extern.h"
 
 extern TIM_HandleTypeDef htim3;
-extern volatile int TIM2_servo_motor_count;// this is 1ms count variable
+extern volatile int TIM2_servo_open_time;// this is 1ms count variable
 
 uint8_t temp_servo_state = 0;
 
@@ -18,36 +19,35 @@ uint8_t temp_servo_state = 0;
  * Servomotor 0 degrees : 1ms duty
  * */
 
-static uint8_t servo_state = SERVO_OPEN;
 
 void servo_motor_main(void) {
-	//static int off_flag = 0;
-	if(TIM2_servo_motor_count == 4000){
-		//이러면 시작하자마자 닫힐려나??흠...테스트필요
-		servo_state = SERVO_LOCK;
-	}
+	static int servo_elevator_state=0;
+	//static int off_flag=0;
 
-	switch (servo_state) {
-	case SERVO_LOCK:
-		// 1.rotation of 90 dgrees
-		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 75);
-		break;
-	case SERVO_OPEN:
-		// 1.rotation of 0 dgrees
-		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 28);
-		break;
+	if(open_flag==1){
+		switch (servo_elevator_state) {
+		case 0:
+			// 1.rotation of 90 dgrees
+//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 75);
+			TIM2_servo_open_time = 0;
+			servo_elevator_state = 1;
+			break;
+		case 1:
+			if(TIM2_servo_open_time >=3000){
+				open_state = DOOR_CLOSE;
+				open_flag = 0;
+			}
+			// 1.rotation of 0 dgrees
+//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 28);
+			break;
+		}
+
 	}
 }
 
-void set_servo_state(uint8_t p_servostate){
-	servo_state = p_servostate;
-}
-uint8_t get_servo_state(void){
-	return servo_state;
-}
 
 void temp_servo_motor_run(void) {
-		if(TIM2_servo_motor_count == 5000){
+		if(TIM2_servo_open_time == 5000){
 			temp_servo_state = 2;
 		}
 		// every 1sec

@@ -10,6 +10,11 @@ typedef enum{
 } MOTOR_STATE;
 
 typedef enum{
+	DOOR_OPEN
+	,DOOR_CLOSE
+} DOOR_STATE;
+
+typedef enum{
 	SERVO_OPEN // 0 dgree
 	,SERVO_LOCK // 180 dgree
 } SERVO_STATE;

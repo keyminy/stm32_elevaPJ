@@ -31,6 +31,8 @@ extern void dc_motor_pwm_control(void);
 extern void UpdateLEDBasedOnPWM();
 
 extern volatile char move_flag;
+volatile DOOR_STATE open_state;
+volatile char open_flag;
 volatile uint8_t target_floor_arr[SIZE];
 volatile uint8_t curr_floor_arr[SIZE];
 volatile uint8_t current_floor;

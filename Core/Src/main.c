@@ -104,7 +104,7 @@ volatile int TIM2_1ms_counter=0;
 volatile int TIM2_1ms_DOT_counter=0;
 volatile int TIM2_1ms_FND_counter=0;
 volatile int TIM2_74HC595_counter=0;
-volatile int TIM2_servo_motor_count=0;
+volatile int TIM2_servo_open_time=0;
 
 /* USER CODE END PV */
 
@@ -720,6 +720,7 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)  // while(1)
   {
+	choose_eleva_floor2();
 	  move_direct_check();
 	  osDelay(1);
   }
@@ -803,7 +804,7 @@ void ctrl_servomotor(void *argument)
   /* Infinite loop */
   for(;;)
   {
-//	  servo_motor_main();
+	  servo_motor_main();
     osDelay(1);
   }
   /* USER CODE END ctrl_servomotor */
@@ -832,7 +833,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		TIM2_1ms_DOT_counter++;
 		TIM2_1ms_FND_counter++;
 		TIM2_74HC595_counter++;
-		TIM2_servo_motor_count++;
+		TIM2_servo_open_time++;
 	}
   /* USER CODE END Callback 1 */
 }

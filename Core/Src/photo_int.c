@@ -34,7 +34,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		break;
 	}
 	if(target_floor_arr[current_floor] == 1){
+		printf("g!\n");
 		target_floor_arr[current_floor] = 0;
+		open_state = DOOR_OPEN;
+		open_flag = 1;
+		set_prev_eleva_state(get_curr_eleva_state());
 		set_curr_eleva_state(ELEVA_STOP);
 	}
 //	if(get_curr_floor() == get_target_floor()){

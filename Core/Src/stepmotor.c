@@ -1,6 +1,7 @@
 #include "stepmotor.h"
 #include "def.h"
 #include "button.h"
+#include "extern.h"
 
 extern void delay_us(unsigned int us);
 
@@ -106,6 +107,9 @@ void stop_motor(void){
 }
 
 void ctrl_stepmotor_eleva(uint8_t curr_eleva_state){
+	if(open_state == DOOR_OPEN){
+		return;
+	}
 	switch (curr_eleva_state) {
 		case ELEVA_STOP:
 			stop_motor();

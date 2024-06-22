@@ -20,5 +20,6 @@ void display_lcd_floor_info(void);
 void display_lcd_alert_info(void);
 uint8_t isFloorEmpty(uint8_t *pArr,int size);
 void choose_eleva_floor2(void);
+void set_prev_eleva_state(uint8_t eleva_state);
 
 #endif /* INC_ELEVATOR_H_ */

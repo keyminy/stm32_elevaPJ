@@ -8,13 +8,14 @@
 volatile static uint8_t curr_floor;
 volatile static uint8_t target_floor;
 volatile static uint8_t curr_eleva_state = ELEVA_STOP;
-
 /* ref */
 volatile uint8_t target_floor_arr[SIZE]={0,};
 volatile uint8_t curr_floor_arr[SIZE]={0,};
 volatile uint8_t current_floor=0;
 volatile char move_flag = 0;
 volatile char open_flag = 0;
+static uint8_t prev_eleva_state = ELEVA_STOP;
+volatile DOOR_STATE open_state = DOOR_CLOSE;
 /* end ref */
 
 void elevator_init(void){
@@ -49,6 +50,9 @@ uint8_t get_target_floor(void){
 
 void set_curr_eleva_state(uint8_t eleva_state){
 	curr_eleva_state = eleva_state;
+}
+void set_prev_eleva_state(uint8_t eleva_state){
+	prev_eleva_state = eleva_state;
 }
 uint8_t get_curr_eleva_state(void){
 	return curr_eleva_state;
@@ -121,40 +125,42 @@ void choose_eleva_floor2(void){
 void move_direct_check() {
 	int temp[SIZE] = {0};
 	uint8_t up = 0, down = 0;
+//	printf("s,up : %d,down : %d\n",up,down);
+
 
 //	HAL_GPIO_TogglePin(GPIOB, built_LED_Pin);
 //	HAL_Delay(200);
 
-	choose_eleva_floor2();
-
-	if (!isFloorEmpty(target_floor_arr,5)) {
-		move_flag = 1;
-	}
-	if (move_flag == 1) {
-		if (isFloorEmpty(target_floor_arr,5)) {
-			// 이런 경우는 생길 수 없을거 같은데
-			// 이동 중 취소한 상태, 가장 가까운 층에 멈출 수 있게하기
-			set_curr_eleva_state(ELEVA_STOP);
+//	if (target_floor_arr[1] !=0 || target_floor_arr[2]!=0
+//			|| target_floor_arr[3]!=0 || target_floor_arr[4]!=0) {
+//		move_flag = 1;
+//	}
+//	if (move_flag == 1) {
+		if (target_floor_arr[1] ==0 && target_floor_arr[2]==0
+				&& target_floor_arr[3]==0 && target_floor_arr[4]==0) {
+			curr_eleva_state = ELEVA_STOP;
 		} else {
 			switch (curr_eleva_state) {
 			case ELEVA_STOP:
 				if(target_floor_arr[1]){
 					temp[1] = 1 - current_floor;
-					printf("go %d\n",temp[1]); // 254.. it should be 1-3=-2
-					printf("? %d\n",current_floor); // 3
-					(temp[1]>0)?(up++):((temp[1]==0)?(curr_eleva_state=ELEVA_STOP):(down++));
+					(temp[1]>0)?(up++):
+							((temp[1]==0)?(curr_eleva_state=ELEVA_STOP,target_floor_arr[1]=0):(down++));
 				}
 				if(target_floor_arr[2]){
 					temp[2] = 2 - current_floor;
-					(temp[2]>0)?(up++):((temp[2]==0)?(curr_eleva_state=ELEVA_STOP):(down++));
+					(temp[2]>0)?(up++):
+							((temp[2]==0)?(curr_eleva_state=ELEVA_STOP,target_floor_arr[2]=0):(down++));
 				}
 				if(target_floor_arr[3]){
 					temp[3] = 3 - current_floor;
-					(temp[3]>0)?(up++):((temp[3]==0)?(curr_eleva_state=ELEVA_STOP):(down++));
+					(temp[3]>0)?(up++):
+							((temp[3]==0)?(curr_eleva_state=ELEVA_STOP,target_floor_arr[3]=0):(down++));
 				}
 				if(target_floor_arr[4]){
 					temp[4] = 4 - current_floor;
-					(temp[4]>0)?(up++):((temp[4]==0)?(curr_eleva_state=ELEVA_STOP):(down++));
+					(temp[4]>0)?(up++):
+							((temp[4]==0)?(curr_eleva_state=ELEVA_STOP,target_floor_arr[4]=0):(down++));
 				}
 				if(up>down){
 					curr_eleva_state = ELEVA_START_BOTTOM_UP;
@@ -162,11 +168,29 @@ void move_direct_check() {
 					curr_eleva_state = ELEVA_START_TOP_DOWN;
 				}else{
 					// down = up
+					printf("!! %d\n",prev_eleva_state);
+					// 계속 방향을 유지하게 해줘야한다.
+					if(prev_eleva_state==ELEVA_START_BOTTOM_UP) {
+						printf("???\n");
+						curr_eleva_state=ELEVA_START_BOTTOM_UP;
+					}
+					if(prev_eleva_state==ELEVA_START_TOP_DOWN) {curr_eleva_state=ELEVA_START_TOP_DOWN;}
 				}
-				printf("up:%d,down%d\n",up,down);
-
 				break;
 			case ELEVA_START_BOTTOM_UP:
+//				if(target_floor_arr[2]==0){
+//					HAL_GPIO_WritePin(GPIOB, built_LED_Pin, 1);
+//					printf("hello?\n");
+//					curr_eleva_state = ELEVA_STOP;
+//				}
+//				if (target_floor_arr[1] ==0 && target_floor_arr[2]==0
+//						&& target_floor_arr[3]==0 && target_floor_arr[4]==0) {
+//					HAL_GPIO_WritePin(GPIOB, built_LED_Pin, 1);
+//					printf("humm2\n");
+//					// 이런 경우는 생길 수 없을거 같은데
+//					// 이동 중 취소한 상태, 가장 가까운 층에 멈출 수 있게하기
+//					curr_eleva_state = ELEVA_STOP;
+//				}
 //				if(target_floor_arr[current_floor] == 1){
 //					target_floor_arr[current_floor] = 0;
 //					curr_eleva_state = ELEVA_STOP;
@@ -193,8 +217,8 @@ void move_direct_check() {
 				break;
 			}
 		}
-		move_flag = 0;
-	}
+//		move_flag = 0;
+//	}
 }
 
 
