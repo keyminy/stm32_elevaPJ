@@ -128,8 +128,8 @@ void Error_Handler(void);
 #define LED5_GPIO_Port GPIOB
 #define LED6_Pin GPIO_PIN_6
 #define LED6_GPIO_Port GPIOB
-#define LED7_Pin GPIO_PIN_7
-#define LED7_GPIO_Port GPIOB
+#define built_LED_Pin GPIO_PIN_7
+#define built_LED_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

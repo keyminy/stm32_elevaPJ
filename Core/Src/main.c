@@ -633,7 +633,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, LED0_Pin|LED1_Pin|LED2_Pin|LATCH_74HC595_Pin
                           |LED3_Pin|LED4_Pin|LED5_Pin|LED6_Pin
-                          |LED7_Pin, GPIO_PIN_RESET);
+                          |built_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, StepMotor_IN1_Pin|StepMotor_IN2_Pin|StepMotor_IN3_Pin|StepMotor_IN4_Pin
@@ -662,10 +662,10 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : LED0_Pin LED1_Pin LED2_Pin LATCH_74HC595_Pin
                            LED3_Pin LED4_Pin LED5_Pin LED6_Pin
-                           LED7_Pin */
+                           built_LED_Pin */
   GPIO_InitStruct.Pin = LED0_Pin|LED1_Pin|LED2_Pin|LATCH_74HC595_Pin
                           |LED3_Pin|LED4_Pin|LED5_Pin|LED6_Pin
-                          |LED7_Pin;
+                          |built_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -720,7 +720,6 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)  // while(1)
   {
-	  choose_eleva_floor2();
 	  move_direct_check();
 	  osDelay(1);
   }

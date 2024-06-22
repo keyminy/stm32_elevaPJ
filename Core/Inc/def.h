@@ -1,6 +1,7 @@
 #ifndef INC_DEF_H_
 #define INC_DEF_H_
 #include "main.h"
+#define SIZE 5
 
 typedef enum{
 	MOTOR_IDLE
