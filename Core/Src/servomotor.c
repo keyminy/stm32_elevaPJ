@@ -36,6 +36,7 @@ void servo_motor_main(void) {
 			if(TIM2_servo_open_time >=3000){
 				open_state = DOOR_CLOSE;
 				open_flag = 0;
+				servo_elevator_state=0;
 			}
 			// 1.rotation of 0 dgrees
 //		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 28);

@@ -21,5 +21,6 @@ void display_lcd_alert_info(void);
 uint8_t isFloorEmpty(uint8_t *pArr,int size);
 void choose_eleva_floor2(void);
 void set_prev_eleva_state(uint8_t eleva_state);
+uint8_t array_to_weighted_binary_int(uint8_t arr[], int size);
 
 #endif /* INC_ELEVATOR_H_ */

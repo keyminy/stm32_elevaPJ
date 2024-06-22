@@ -10,7 +10,7 @@ volatile static uint8_t target_floor;
 volatile static uint8_t curr_eleva_state = ELEVA_STOP;
 /* ref */
 volatile uint8_t target_floor_arr[SIZE]={0,};
-volatile uint8_t curr_floor_arr[SIZE]={0,};
+volatile uint8_t curr_floor_arr[SIZE]={0,1,0,0,0};
 volatile uint8_t current_floor=0;
 volatile char move_flag = 0;
 volatile char open_flag = 0;
@@ -82,7 +82,13 @@ void display_lcd_alert_info(void){
 	lcd_string(lcd_buff1);
 }
 
-
+uint8_t array_to_weighted_binary_int(uint8_t arr[], int size) {
+	uint8_t result = 0;
+	for (int i = 1; i < size; i++) {  // Start from index 1 to skip floor 0
+		result += arr[i] * (1 << (i - 1));  // Weight is 2^(index-1)
+	}
+	return result;
+}
 
 uint8_t isFloorEmpty(uint8_t* pArr, int size) {
 	int cnt = 0;
@@ -168,52 +174,16 @@ void move_direct_check() {
 					curr_eleva_state = ELEVA_START_TOP_DOWN;
 				}else{
 					// down = up
-					printf("!! %d\n",prev_eleva_state);
 					// 계속 방향을 유지하게 해줘야한다.
-					if(prev_eleva_state==ELEVA_START_BOTTOM_UP) {
-						printf("???\n");
-						curr_eleva_state=ELEVA_START_BOTTOM_UP;
-					}
+					if(prev_eleva_state==ELEVA_START_BOTTOM_UP) {curr_eleva_state=ELEVA_START_BOTTOM_UP;}
 					if(prev_eleva_state==ELEVA_START_TOP_DOWN) {curr_eleva_state=ELEVA_START_TOP_DOWN;}
 				}
 				break;
 			case ELEVA_START_BOTTOM_UP:
-//				if(target_floor_arr[2]==0){
-//					HAL_GPIO_WritePin(GPIOB, built_LED_Pin, 1);
-//					printf("hello?\n");
-//					curr_eleva_state = ELEVA_STOP;
-//				}
-//				if (target_floor_arr[1] ==0 && target_floor_arr[2]==0
-//						&& target_floor_arr[3]==0 && target_floor_arr[4]==0) {
-//					HAL_GPIO_WritePin(GPIOB, built_LED_Pin, 1);
-//					printf("humm2\n");
-//					// 이런 경우는 생길 수 없을거 같은데
-//					// 이동 중 취소한 상태, 가장 가까운 층에 멈출 수 있게하기
-//					curr_eleva_state = ELEVA_STOP;
-//				}
-//				if(target_floor_arr[current_floor] == 1){
-//					target_floor_arr[current_floor] = 0;
-//					curr_eleva_state = ELEVA_STOP;
-//				}
-//				if (curr_floor > target_floor) {
-//					// TODO : Check if a higher floor is reserved in the floor_queue, go to the higher floor, and then go to the lower reserved floor.
-//
-//				} else if (current_floor < purpose_floor) {
-//					// If there are floors to go up, keep moving up.
-//					;
-//				}
+				if(curr_floor==4) curr_eleva_state = ELEVA_STOP;
 				break;
 			case ELEVA_START_TOP_DOWN:
-//				if(target_floor_arr[current_floor] == 1){
-//					target_floor_arr[current_floor] = 0;
-//					curr_eleva_state = ELEVA_STOP;
-//				}
-//				if (curr_floor > target_floor) {
-//					// If there are floors to go down, keep moving down.
-//					;
-//				} else if (curr_floor < target_floor) {
-//					// TODO : Check if a lower floor is reserved in the floor_queue, go to the lower floor, and then go to the higher reserved floor.
-//				}
+				if(curr_floor==1) curr_eleva_state = ELEVA_STOP;
 				break;
 			}
 		}
