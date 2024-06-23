@@ -133,57 +133,72 @@ void move_direct_check() {
 	uint8_t up = 0, down = 0;
 //	printf("s,up : %d,down : %d\n",up,down);
 
-	if (target_floor_arr[1] == 0 && target_floor_arr[2] == 0
-			&& target_floor_arr[3] == 0 && target_floor_arr[4] == 0) {
-		curr_eleva_state = ELEVA_STOP;
-	} else {
-		switch (curr_eleva_state) {
-		case ELEVA_STOP:
-			if (target_floor_arr[1]) {
-				temp[1] = 1 - current_floor;
-				(temp[1] > 0) ? (up++) : ((temp[1] == 0) ?
-						(curr_eleva_state =	ELEVA_STOP, target_floor_arr[1] = 0) :(down++));
-			}
-			if (target_floor_arr[2]) {
-				temp[2] = 2 - current_floor;
-				(temp[2] > 0) ? (up++) : ((temp[2] == 0) ?
-						(curr_eleva_state =	ELEVA_STOP, target_floor_arr[2] = 0) :(down++));
-			}
-			if (target_floor_arr[3]) {
-				temp[3] = 3 - current_floor;
-				(temp[3] > 0) ? (up++) : ((temp[3] == 0) ?
-						(curr_eleva_state =	ELEVA_STOP, target_floor_arr[3] = 0) :(down++));
-			}
-			if (target_floor_arr[4]) {
-				temp[4] = 4 - current_floor;
-				(temp[4] > 0) ? (up++) : ((temp[4] == 0) ?
-						(curr_eleva_state =	ELEVA_STOP, target_floor_arr[4] = 0) :(down++));
-			}
-			if (up > down) {
-				curr_eleva_state = ELEVA_START_BOTTOM_UP;
-			} else if (down > up) {
-				curr_eleva_state = ELEVA_START_TOP_DOWN;
-			} else {
-				// down = up
-				// 계속 방향을 유지하게 해줘야한다.
-				if (prev_eleva_state == ELEVA_START_BOTTOM_UP) {
-					curr_eleva_state = ELEVA_START_BOTTOM_UP;
-				}
-				if (prev_eleva_state == ELEVA_START_TOP_DOWN) {
-					curr_eleva_state = ELEVA_START_TOP_DOWN;
-				}
-			}
-			break;
-		case ELEVA_START_BOTTOM_UP:
-			if (curr_floor == 4)
-				curr_eleva_state = ELEVA_STOP;
-			break;
-		case ELEVA_START_TOP_DOWN:
-			if (curr_floor == 1)
-				curr_eleva_state = ELEVA_STOP;
-			break;
-		}
+	if (target_floor_arr[1] !=0 || target_floor_arr[2]!=0
+			|| target_floor_arr[3]!=0 || target_floor_arr[4]!=0) {
+		move_flag = 1;
 	}
+
+	if (move_flag == 1) {
+		if (target_floor_arr[1] == 0 && target_floor_arr[2] == 0
+			&& target_floor_arr[3] == 0 && target_floor_arr[4] == 0) {
+				if(!(HAL_GPIO_ReadPin(PhotoSensor_EXTI0_GPIO_Port, PhotoSensor_EXTI0_Pin)||
+						HAL_GPIO_ReadPin(PhotoSensor_EXTI1_GPIO_Port, PhotoSensor_EXTI1_Pin)||
+						HAL_GPIO_ReadPin(PhotoSensor_EXTI4_GPIO_Port, PhotoSensor_EXTI4_Pin)||
+						HAL_GPIO_ReadPin(PhotoSensor_EXTI5_GPIO_Port, PhotoSensor_EXTI5_Pin)))
+				{
+					return;
+				}
+				curr_eleva_state = ELEVA_STOP;
+				move_flag=0;
+		} else {
+			switch (curr_eleva_state) {
+			case ELEVA_STOP:
+				if (target_floor_arr[1]) {
+					temp[1] = 1 - current_floor;
+					(temp[1] > 0) ? (up++) : ((temp[1] == 0) ?
+							(curr_eleva_state =	ELEVA_STOP, target_floor_arr[1] = 0) :(down++));
+				}
+				if (target_floor_arr[2]) {
+					temp[2] = 2 - current_floor;
+					(temp[2] > 0) ? (up++) : ((temp[2] == 0) ?
+							(curr_eleva_state =	ELEVA_STOP, target_floor_arr[2] = 0) :(down++));
+				}
+				if (target_floor_arr[3]) {
+					temp[3] = 3 - current_floor;
+					(temp[3] > 0) ? (up++) : ((temp[3] == 0) ?
+							(curr_eleva_state =	ELEVA_STOP, target_floor_arr[3] = 0) :(down++));
+				}
+				if (target_floor_arr[4]) {
+					temp[4] = 4 - current_floor;
+					(temp[4] > 0) ? (up++) : ((temp[4] == 0) ?
+							(curr_eleva_state =	ELEVA_STOP, target_floor_arr[4] = 0) :(down++));
+				}
+				if (up > down) {
+					curr_eleva_state = ELEVA_START_BOTTOM_UP;
+				} else if (down > up) {
+					curr_eleva_state = ELEVA_START_TOP_DOWN;
+				} else {
+					// down = up
+					// 계속 방향을 유지하게 해줘야한다.
+					if (prev_eleva_state == ELEVA_START_BOTTOM_UP) {
+						curr_eleva_state = ELEVA_START_BOTTOM_UP;
+					}
+					if (prev_eleva_state == ELEVA_START_TOP_DOWN) {
+						curr_eleva_state = ELEVA_START_TOP_DOWN;
+					}
+				}
+				break;
+			case ELEVA_START_BOTTOM_UP:
+				if (curr_floor == 4)
+					curr_eleva_state = ELEVA_STOP;
+				break;
+			case ELEVA_START_TOP_DOWN:
+				if (curr_floor == 1)
+					curr_eleva_state = ELEVA_STOP;
+				break;
+			}
+		}// end else
+	} // end move_flag
 }
 
 
