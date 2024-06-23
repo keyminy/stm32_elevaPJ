@@ -192,12 +192,12 @@ void move_direct_check() {
 				break;
 			case ELEVA_START_BOTTOM_UP:
 				prev_eleva_state = ELEVA_START_BOTTOM_UP;
-				if (curr_floor == 4)
+				if (current_floor == 4)
 					curr_eleva_state = ELEVA_STOP;
 				break;
 			case ELEVA_START_TOP_DOWN:
 				prev_eleva_state = ELEVA_START_TOP_DOWN;
-				if (curr_floor == 1)
+				if (current_floor == 1)
 					curr_eleva_state = ELEVA_STOP;
 				break;
 			}
