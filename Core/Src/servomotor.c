@@ -4,9 +4,10 @@
 
 extern TIM_HandleTypeDef htim3;
 extern volatile int TIM2_servo_open_time;// this is 1ms count variable
+extern volatile int TIM2_off_servo_time;
 
 uint8_t temp_servo_state = 0;
-
+static int off_flag=0;
 
 /*
  * TIM3 operating frequency : 84MHz
@@ -18,31 +19,48 @@ uint8_t temp_servo_state = 0;
  * Servomotor 90 degrees : 1.5ms duty
  * Servomotor 0 degrees : 1ms duty
  * */
-
+void init_servo_LOCKED(){
+	open_flag = 0;
+	open_state = DOOR_CLOSE;
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 75); //90 degree
+	TIM2_off_servo_time = 0;
+	off_flag==1;
+}
 
 void servo_motor_main(void) {
 	static int servo_elevator_state=0;
-	//static int off_flag=0;
+	off_flag=0;
 
 	if(open_flag==1){
 		switch (servo_elevator_state) {
-		case 0:
-			// 1.rotation of 90 dgrees
-//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 75);
+		case 0: // servo open
+			HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+			// 1.rotation of 0 dgrees
+			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 30);
 			TIM2_servo_open_time = 0;
 			servo_elevator_state = 1;
 			break;
-		case 1:
+		case 1: // servo lock
 			if(TIM2_servo_open_time >=3000){
+				// 1.rotation of 90 dgrees
+				__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 75);
 				open_state = DOOR_CLOSE;
 				open_flag = 0;
+				off_flag = 1;
 				servo_elevator_state=0;
+				TIM2_off_servo_time = 0;
 			}
-			// 1.rotation of 0 dgrees
-//		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 28);
 			break;
 		}
-
+	}else{
+		if(off_flag==1){
+			if(TIM2_off_servo_time>=1000){
+				TIM2_off_servo_time = 0;
+				HAL_TIM_PWM_Stop(&htim3,TIM_CHANNEL_2);
+				off_flag = 0;
+			}
+		}
 	}
 }
 
