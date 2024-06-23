@@ -131,13 +131,11 @@ void choose_eleva_floor2(void){
 void move_direct_check() {
 	int temp[SIZE] = {0};
 	uint8_t up = 0, down = 0;
-//	printf("s,up : %d,down : %d\n",up,down);
 
 	if (target_floor_arr[1] !=0 || target_floor_arr[2]!=0
 			|| target_floor_arr[3]!=0 || target_floor_arr[4]!=0) {
 		move_flag = 1;
 	}
-
 	if (move_flag == 1) {
 		if (target_floor_arr[1] == 0 && target_floor_arr[2] == 0
 			&& target_floor_arr[3] == 0 && target_floor_arr[4] == 0) {

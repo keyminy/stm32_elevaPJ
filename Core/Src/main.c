@@ -764,8 +764,8 @@ void ctrl_dotmatrix(void *argument)
   {
 	 // dotmatrix_main_test();
 	  // TODO
-	//control_dotmatrix(get_curr_eleva_state());
-	//  dotmatrix_main();
+	control_dotmatrix(get_curr_eleva_state());
+	  //dotmatrix_main();
 //	  dotmatrix_main_test();
     osDelay(1);
   }
@@ -782,11 +782,11 @@ void ctrl_dotmatrix(void *argument)
 void ctrl_fnd(void *argument)
 {
   /* USER CODE BEGIN ctrl_fnd */
-	//init_fnd();
+	init_fnd();
   /* Infinite loop */
   for(;;)
   {
-	//fnd_display();
+	fnd_display();
     osDelay(1);
   }
   /* USER CODE END ctrl_fnd */
