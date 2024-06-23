@@ -149,6 +149,8 @@ void move_direct_check() {
 					return;
 				}
 				curr_eleva_state = ELEVA_STOP;
+				open_state = DOOR_OPEN;
+				open_flag = 1;
 				move_flag=0;
 		} else {
 			switch (curr_eleva_state) {
@@ -189,10 +191,12 @@ void move_direct_check() {
 				}
 				break;
 			case ELEVA_START_BOTTOM_UP:
+				prev_eleva_state = ELEVA_START_BOTTOM_UP;
 				if (curr_floor == 4)
 					curr_eleva_state = ELEVA_STOP;
 				break;
 			case ELEVA_START_TOP_DOWN:
+				prev_eleva_state = ELEVA_START_TOP_DOWN;
 				if (curr_floor == 1)
 					curr_eleva_state = ELEVA_STOP;
 				break;

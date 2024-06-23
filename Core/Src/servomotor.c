@@ -30,7 +30,6 @@ void init_servo_LOCKED(){
 
 void servo_motor_main(void) {
 	static int servo_elevator_state=0;
-	off_flag=0;
 
 	if(open_flag==1){
 		switch (servo_elevator_state) {
